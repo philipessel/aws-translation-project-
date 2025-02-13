@@ -82,6 +82,7 @@ resource "aws_s3_bucket_notification" "requests_notification" {
 
   depends_on = [aws_lambda_permission.s3_invoke_lambda]
 }
+
 */
 
 resource "aws_s3_bucket" "requests" {
@@ -129,7 +130,7 @@ resource "aws_s3_bucket_policy" "requests_policy" {
         Effect    = "Allow",
         Principal = { Service = "s3.amazonaws.com" },
         Action    = "lambda:InvokeFunction",
-        Resource  = aws_lambda_function.translate_function.arn
+        Resource  = aws_lambda_function.translation_api_function.arn
       }
     ]
   })
@@ -166,7 +167,7 @@ resource "aws_s3_bucket_policy" "responses_policy" {
 resource "aws_lambda_permission" "s3_invoke_lambda" {
   statement_id  = "AllowS3Invoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.translate_function.function_name
+  function_name = aws_lambda_function.translation_api_function.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.requests.arn
 }
@@ -176,7 +177,7 @@ resource "aws_s3_bucket_notification" "requests_notification" {
   bucket = aws_s3_bucket.requests.id
 
   lambda_function {
-    lambda_function_arn = aws_lambda_function.translate_function.arn
+    lambda_function_arn = aws_lambda_function.translation_api_function.arn
     events              = ["s3:ObjectCreated:*"]
   }
 
