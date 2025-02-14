@@ -127,7 +127,7 @@ def process_translation(event, context):
                 logger.info("Translation successful.")
 
                 # Save and upload the translated text to S3
-                translated_text = result['TranslatedText'] 
+                translated_text = result['TranslatedText']
                 output_key = f"output_{uuid.uuid4()}.json" # Use unique ID for the output key
                 s3.put_object(Bucket=RESPONSE_BUCKET, Key=output_key, Body=translated_text)
                 logger.info(f"Translated text uploaded to S3 with key: {output_key}")
